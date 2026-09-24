@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 
-app = FastAPI(title="Repository Lab API")
+app = FastAPI(
+    title="Repository Lab API",
+    description="Simple REST API created with FastAPI"
+)
 
 
 @app.get("/")
