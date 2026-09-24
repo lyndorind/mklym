@@ -1,7 +1,7 @@
 [project]
 name = "repository-lab"
 version = "0.1.0"
-description = "Add your description here"
+description = "REST service for Lab 2"
 readme = "README.md"
 authors = [
     { name = "ma-ginta", email = "klymovych.mariia103@gmail.com" }
