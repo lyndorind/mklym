@@ -1,5 +1,3 @@
-# Pull Request
-
 ## Description
 **What does this PR change?**
 
@@ -11,11 +9,11 @@
 -
 
 ## Type of Change
-- [ ] Bug fix
-- [ ] New feature
-- [ ] Documentation update
-- [ ] Refactoring
-- [ ] Other
+- Bug fix
+- New feature
+- Documentation update
+- Refactoring
+- Other
 
 ## Testing
 **How was this tested?**
@@ -28,11 +26,11 @@
 -
 
 ## Checklist
-- [ ] Code follows project standards
-- [ ] Self-review completed
-- [ ] Documentation updated (if needed)
-- [ ] Tests added/updated (if needed)
-- [ ] All tests pass
+- Code follows project standards
+- Self-review completed
+- Documentation updated (if needed)
+- Tests added/updated (if needed)
+- All tests pass
 
 ## Additional Notes
 -
