@@ -1,17 +1,40 @@
+# Pull Request
+
 ## Description
-<!-- Describe the changes made in this pull request. -->
+**What does this PR change?**
+
+-
 
 ## Related Issue
-<!-- Link the related issue, if applicable. Example: Closes #1 -->
+**Fixes #**
 
-## Changes Made
-- 
-- 
+-
+
+## Type of Change
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Documentation update
+- [ ] Refactoring
+- [ ] Other
 
 ## Testing
-<!-- Describe how you tested the changes. -->
+**How was this tested?**
+
+-
+
+## Screenshots
+**If applicable, add screenshots here.**
+
+-
 
 ## Checklist
-- [ ] My changes follow the project guidelines.
-- [ ] I have tested my changes.
-- [ ] I have updated the documentation if necessary.
+- [ ] Code follows project standards
+- [ ] Self-review completed
+- [ ] Documentation updated (if needed)
+- [ ] Tests added/updated (if needed)
+- [ ] All tests pass
+
+## Additional Notes
+-
+
+``
