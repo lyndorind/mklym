@@ -1,6 +1,6 @@
 [project]
 name = "repository-lab"
-version = "0.1.0"
+version = "0.1.1"
 description = "REST service for Lab 2"
 readme = "README.md"
 authors = [
