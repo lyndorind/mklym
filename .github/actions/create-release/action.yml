@@ -1,0 +1,60 @@
+name: Create tag and release
+description: Creates a git tag and a GitHub release with assets
+
+inputs:
+  version:
+    description: Version without "v" prefix (e.g. 1.2.0)
+    required: true
+  notes-file:
+    description: Path to file with release notes
+    required: true
+  assets:
+    description: Space-separated list of files to attach
+    required: true
+  github-token:
+    description: Token with contents:write permission
+    required: true
+
+outputs:
+  tag:
+    description: Created tag name
+    value: ${{ steps.release.outputs.tag }}
+  created:
+    description: "true if release was created, false if tag already existed"
+    value: ${{ steps.release.outputs.created }}
+
+runs:
+  using: composite
+  steps:
+    - name: Create tag and release
+      id: release
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        VERSION: ${{ inputs.version }}
+        NOTES_FILE: ${{ inputs.notes-file }}
+        ASSETS: ${{ inputs.assets }}
+      run: |
+        set -euo pipefail
+        TAG="v${VERSION}"
+        echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+
+        if git ls-remote --exit-code --tags origin "refs/tags/${TAG}" >/dev/null 2>&1; then
+          echo "::notice::Tag ${TAG} already exists, skipping release. Bump the version to publish a new one."
+          echo "created=false" >> "$GITHUB_OUTPUT"
+          exit 0
+        fi
+
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+        git tag -a "${TAG}" -m "Release ${TAG}"
+        git push origin "${TAG}"
+
+        # shellcheck disable=SC2086
+        gh release create "${TAG}" ${ASSETS} \
+          --title "${TAG}" \
+          --notes-file "${NOTES_FILE}" \
+          --verify-tag
+
+        echo "created=true" >> "$GITHUB_OUTPUT"
