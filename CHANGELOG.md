@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1.0] - 2026-10-25
+## [0.1.1] - 2026-10-25
 
 ### Added
 
@@ -20,3 +20,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pull Request template
 - GitHub Actions: збірка пакету на Pull Request
 - GitHub Actions: автоматичний тег і реліз після злиття в main
+- README: corrected the `GET /health` response example and documented the `GET /info` endpoint

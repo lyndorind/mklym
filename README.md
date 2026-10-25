@@ -31,10 +31,37 @@ Returns a welcome message:
 {"message": "Welcome to Repository Lab API"}
 ```
 
-### `GET /health`
+### `GET /info`
 
-Returns the application health status:
+Returns the service name:
 
 ```json
-{"status": "ok"}
+{"service": "Repository Lab API"}
 ```
+
+### `GET /health`
+
+Health-check endpoint. Use it to verify that the application is running and responding to requests. It takes no parameters and returns `200 OK`.
+
+Example request (PowerShell):
+
+```powershell
+Invoke-RestMethod http://127.0.0.1:8000/health
+```
+
+Or with curl:
+
+```bash
+curl http://127.0.0.1:8000/health
+```
+
+Example response:
+
+```json
+{
+  "status": "ok",
+  "message": "Repository Lab API is running"
+}
+```
+
+Any response other than `200 OK` means the service is not healthy.
