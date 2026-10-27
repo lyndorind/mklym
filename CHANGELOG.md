@@ -21,3 +21,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GitHub Actions: збірка пакету на Pull Request
 - GitHub Actions: автоматичний тег і реліз після злиття в main
 - README: corrected the `GET /health` response example and documented the `GET /info` endpoint
+
+- Ruff linter and pytest unit tests
+- PR workflow running lint and tests
