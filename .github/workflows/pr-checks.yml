@@ -53,6 +53,13 @@ jobs:
           --cov-report=term-missing
           --cov-fail-under=80
           --alluredir=allure-results
+      
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage.xml
+          fail_ci_if_error: true
 
       - name: Upload coverage report
         if: always()
