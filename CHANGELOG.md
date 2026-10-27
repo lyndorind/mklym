@@ -24,3 +24,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Ruff linter and pytest unit tests
 - PR workflow running lint and tests
+- Codecov integration
