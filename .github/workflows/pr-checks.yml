@@ -97,7 +97,7 @@ jobs:
           fail_ci_if_error: true
 
       - name: SonarQube Cloud scan
-        uses: SonarSource/sonarqube-scan-action@v5
+        uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
