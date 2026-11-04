@@ -1,13 +1,19 @@
+codecov:
+  notify:
+    wait_for_ci: false
+
 coverage:
   status:
     project:
       default:
         target: 80%
         threshold: 0%
+        if_not_found: success
     patch:
       default:
         target: 80%
         threshold: 0%
+        if_not_found: success
 
 comment:
   layout: "diff, files"

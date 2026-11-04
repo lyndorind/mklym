@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - GitHub Actions workflow for generating Allure test reports
 - Automatic publication of Allure reports to GitHub Pages
+- SonarQube Cloud integration for automated code quality analysis
+- Snyk integration for automated security vulnerability scanning
 
 ## [0.1.1] - 2026-10-25
 
