@@ -1,6 +1,7 @@
 codecov:
   notify:
     wait_for_ci: false
+  require_ci_to_pass: false
 
 coverage:
   status:
@@ -9,6 +10,8 @@ coverage:
         target: 80%
         threshold: 0%
         if_not_found: success
+        if_ci_failed: error
+        only_pulls: false
     patch:
       default:
         target: 80%
@@ -18,3 +21,4 @@ coverage:
 comment:
   layout: "diff, files"
   behavior: default
+  require_changes: false
