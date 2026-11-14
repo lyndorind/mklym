@@ -32,3 +32,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PR workflow running lint and tests
 - Codecov integration
 - Dependabot configuration
+- Dockerfile and .dockerignore for container image build
