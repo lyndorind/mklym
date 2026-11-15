@@ -61,4 +61,4 @@ jobs:
           version: ${{ steps.ver.outputs.version }}
           notes-file: release_notes.md
           assets: dist/*.whl dist/*.tar.gz dist/SHA256SUMS.txt
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.RELEASE_TOKEN }}
