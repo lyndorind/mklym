@@ -15,6 +15,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: release
@@ -56,9 +57,17 @@ jobs:
           fi
 
       - name: Create tag and release
+        id: create
         uses: ./.github/actions/create-release
         with:
           version: ${{ steps.ver.outputs.version }}
           notes-file: release_notes.md
           assets: dist/*.whl dist/*.tar.gz dist/SHA256SUMS.txt
-          github-token: ${{ secrets.RELEASE_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Trigger Docker publish
+        if: steps.create.outputs.created == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: v${{ steps.ver.outputs.version }}
+        run: gh workflow run docker-publish.yml -f tag="$TAG"
