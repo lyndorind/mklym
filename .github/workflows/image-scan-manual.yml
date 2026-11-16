@@ -1,0 +1,20 @@
+name: Image scan (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Image tag without v (e.g. 0.2.0) or latest"
+        required: true
+        default: latest
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  scan-version:
+    uses: ./.github/workflows/image-scan.yml
+    with:
+      tag: ${{ inputs.version }}
+    secrets: inherit
