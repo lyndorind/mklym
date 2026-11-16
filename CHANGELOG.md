@@ -37,7 +37,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pull Request template
 - GitHub Actions: збірка пакету на Pull Request
 - GitHub Actions: автоматичний тег і реліз після злиття в main
+- Scheduled and manual image scanning with Trivy, Grype and Snyk (SARIF to Code Scanning)
 
 ### Changed
 
 - README: corrected the `GET /health` response example and documented the `GET /info` endpoint
+- Release workflow triggers Docker publish explicitly via workflow_dispatch

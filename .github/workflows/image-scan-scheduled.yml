@@ -1,0 +1,17 @@
+name: Image scan (scheduled)
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  scan-latest:
+    uses: ./.github/workflows/image-scan.yml
+    with:
+      tag: latest
+    secrets: inherit

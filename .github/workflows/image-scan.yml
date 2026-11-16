@@ -1,0 +1,86 @@
+name: Image scan
+
+on:
+  workflow_call:
+    inputs:
+      tag:
+        description: "Image tag without v, e.g. 0.2.0 or latest"
+        type: string
+        required: true
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  scan:
+    name: scan
+    runs-on: ubuntu-latest
+    env:
+      IMAGE: ${{ vars.QUAY_IMAGE }}:${{ inputs.tag }}
+    steps:
+      - name: Trivy scan
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          image-ref: ${{ env.IMAGE }}
+          format: sarif
+          output: trivy.sarif
+          exit-code: "0"
+
+      - name: Upload Trivy SARIF
+        if: always() && hashFiles('trivy.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: trivy.sarif
+          category: trivy
+
+      - name: Grype scan
+        id: grype
+        uses: anchore/scan-action@v6
+        with:
+          image: ${{ env.IMAGE }}
+          fail-build: false
+          output-format: sarif
+
+      - name: Upload Grype SARIF
+        if: always() && steps.grype.outputs.sarif != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: ${{ steps.grype.outputs.sarif }}
+          category: grype
+
+      - name: Set up Snyk CLI
+        uses: snyk/actions/setup@master
+
+      - name: Snyk container scan
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: snyk container test "$IMAGE" --sarif-file-output=snyk.sarif
+
+      - name: Upload Snyk SARIF
+        if: always() && hashFiles('snyk.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: snyk.sarif
+          category: snyk
+
+      - name: Findings summary
+        if: always()
+        env:
+          GRYPE_SARIF: ${{ steps.grype.outputs.sarif }}
+        run: |
+          {
+            echo "### Findings for $IMAGE"
+            echo "| Scanner | Findings |"
+            echo "|---|---|"
+            for pair in "Trivy:trivy.sarif" "Grype:$GRYPE_SARIF" "Snyk:snyk.sarif"; do
+              name="${pair%%:*}"; file="${pair#*:}"
+              if [ -n "$file" ] && [ -f "$file" ]; then
+                count=$(jq '[.runs[].results[]] | length' "$file")
+              else
+                count="n/a"
+              fi
+              echo "| $name | $count |"
+            done
+          } >> "$GITHUB_STEP_SUMMARY"
