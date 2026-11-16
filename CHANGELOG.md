@@ -43,3 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - README: corrected the `GET /health` response example and documented the `GET /info` endpoint
 - Release workflow triggers Docker publish explicitly via workflow_dispatch
+
+### Fixed
+
+- Use valid action versions in image scan workflow
