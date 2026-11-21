@@ -48,3 +48,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Use valid action versions in image scan workflow
 - Sanitize Snyk SARIF before uploading to Code Scanning
+- Remove invalid security-severity from Snyk SARIF before upload
