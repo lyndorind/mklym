@@ -58,15 +58,12 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         run: snyk container test "$IMAGE" --sarif-file-output=snyk.sarif
 
-      - name: Fix Snyk SARIF severity values
+      - name: Fix Snyk SARIF null severity
         if: always() && hashFiles('snyk.sarif') != ''
         run: |
-          jq '(.runs[].tool.driver.rules[]?.properties |= (
-                if has("security-severity") and (."security-severity" == null)
-                then del(."security-severity")
-                else . end))' snyk.sarif > snyk-fixed.sarif
+          jq 'walk(if type == "object" and has("security-severity") and .["security-severity"] == null then del(.["security-severity"]) else . end)' snyk.sarif > snyk-fixed.sarif
           mv snyk-fixed.sarif snyk.sarif
-      
+
       - name: Upload Snyk SARIF
         if: always() && hashFiles('snyk.sarif') != ''
         uses: github/codeql-action/upload-sarif@v4.39.3
