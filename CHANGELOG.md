@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-11-25
+
+### Added
+
+- Items REST API backed by PostgreSQL (SQLAlchemy, psycopg)
+- Database settings via environment variables and Docker secrets
+- Unit tests for the items API and database helpers
+
 ## [0.2.0] - 2026-11-15
 
 ### Added

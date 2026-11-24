@@ -65,3 +65,16 @@ Example response:
 ```
 
 Any response other than `200 OK` means the service is not healthy.
+
+## Items API (PostgreSQL)
+
+| Method | Path | Description |
+|---|---|---|
+| POST | `/items` | Create an item |
+| GET | `/items` | List items |
+| GET | `/items/{id}` | Get an item |
+| DELETE | `/items/{id}` | Delete an item |
+
+Database settings (environment variables): `DATABASE_URL`, or `POSTGRES_HOST`,
+`POSTGRES_PORT`, `POSTGRES_DB`, `POSTGRES_USER` and `POSTGRES_PASSWORD`
+(or `POSTGRES_PASSWORD_FILE` to read the password from a Docker secret).

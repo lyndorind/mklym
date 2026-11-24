@@ -14,4 +14,5 @@ coverage.xml
 allure-results/
 allure-report/
 .ruff_cache/
-.pytest_cache/
+.pytest_cache/ 
+local.db
