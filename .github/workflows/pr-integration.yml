@@ -131,3 +131,95 @@ jobs:
             echo "=== $c ==="
             docker logs "$c" 2>&1 | tail -n 40
           done
+  
+  load-test:
+    name: load-test
+    needs: docker-pr
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_DB: appdb
+          POSTGRES_USER: app
+          POSTGRES_PASSWORD: ci-only-password
+        options: >-
+          --health-cmd "pg_isready -U app -d appdb"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+      app:
+        image: ${{ vars.QUAY_IMAGE }}:${{ needs.docker-pr.outputs.tag }}
+        env:
+          POSTGRES_HOST: postgres
+          POSTGRES_DB: appdb
+          POSTGRES_USER: app
+          POSTGRES_PASSWORD: ci-only-password
+        ports:
+          - 8000:8000
+        options: --no-healthcheck
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.2.2
+
+      - name: Wait for API
+        run: |
+          for i in $(seq 1 30); do
+            if curl -fsS http://localhost:8000/health; then exit 0; fi
+            sleep 2
+          done
+          echo "API did not become ready"
+          exit 1
+
+      - name: Install JMeter
+        run: |
+          BASE=https://archive.apache.org/dist/jmeter/binaries
+          curl -fsSLO "$BASE/apache-jmeter-5.6.3.tgz"
+          curl -fsSLO "$BASE/apache-jmeter-5.6.3.tgz.sha512"
+          sha512sum -c apache-jmeter-5.6.3.tgz.sha512
+          tar -xzf apache-jmeter-5.6.3.tgz
+          echo "$PWD/apache-jmeter-5.6.3/bin" >> "$GITHUB_PATH"
+
+      - name: Run JMeter with container monitoring
+        run: |
+          mkdir -p load-results
+          echo "time,container,cpu,memory" > load-results/docker-stats.csv
+          (
+            while true; do
+              ts=$(date +%T)
+              docker stats --no-stream --format "{{.Name}},{{.CPUPerc}},{{.MemUsage}}" \
+                | sed "s/^/${ts},/" >> load-results/docker-stats.csv
+              sleep 2
+            done
+          ) &
+          MONITOR_PID=$!
+          trap 'kill "$MONITOR_PID" 2>/dev/null || true' EXIT
+          jmeter -n -t jmeter/mklym-load.jmx \
+            -Jhost=localhost -Jport=8000 \
+            -Jthreads=20 -Jrampup=10 -Jloops=50 \
+            -l load-results/results.jtl \
+            -e -o load-results/report
+
+      - name: Check results and summarize
+        run: |
+          total=$(awk -F, 'NR>1' load-results/results.jtl | wc -l)
+          failed=$(awk -F, 'NR>1 && $8=="false"' load-results/results.jtl | wc -l)
+          {
+            echo "### JMeter"
+            echo "- Requests: $total"
+            echo "- Failed: $failed"
+            echo ""
+            echo "### Peak CPU per container"
+            echo "| Container | Peak CPU |"
+            echo "|---|---|"
+            awk -F, 'NR>1 {v=$3; gsub("%","",v); if (v+0>m[$2]) m[$2]=v+0} END {for (k in m) printf "| %s | %.1f%% |\n", k, m[k]}' load-results/docker-stats.csv
+          } >> "$GITHUB_STEP_SUMMARY"
+          test "$total" -gt 0
+          awk -v t="$total" -v f="$failed" 'BEGIN { exit (f/t > 0.01) }'
+
+      - name: Upload load test results
+        if: always()
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808
+        with:
+          name: load-test-results
+          path: load-results
+          if-no-files-found: warn
