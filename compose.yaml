@@ -1,0 +1,40 @@
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: appdb
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    secrets:
+      - db_password
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d appdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    image: quay.io/lyndorind/mklym:${APP_VERSION:-latest}
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_DB: appdb
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    secrets:
+      - db_password
+    ports:
+      - "8000:8000"
+
+secrets:
+  db_password:
+    file: ./secrets/db_password.txt
+
+volumes:
+  pgdata:

@@ -16,3 +16,5 @@ allure-report/
 .ruff_cache/
 .pytest_cache/ 
 local.db
+secrets/
+.env

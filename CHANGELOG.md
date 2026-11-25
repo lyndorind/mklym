@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PR workflow building a temporary Docker image (expires after 7 days)
 - Postman integration tests run with Newman against services (PostgreSQL and the app image)
 - JMeter load test with container resource monitoring in the PR workflow
+- Docker Compose configuration (PostgreSQL volume, password passed as Docker secret)
 
 ## [0.3.0] - 2026-11-25
 
