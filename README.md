@@ -78,3 +78,16 @@ Any response other than `200 OK` means the service is not healthy.
 Database settings (environment variables): `DATABASE_URL`, or `POSTGRES_HOST`,
 `POSTGRES_PORT`, `POSTGRES_DB`, `POSTGRES_USER` and `POSTGRES_PASSWORD`
 (or `POSTGRES_PASSWORD_FILE` to read the password from a Docker secret).
+
+## Run with Docker Compose
+
+```bash
+mkdir -p secrets
+openssl rand -hex 16 > secrets/db_password.txt
+chmod 644 secrets/db_password.txt
+docker compose up -d
+curl http://localhost:8000/health
+```
+
+Set `APP_VERSION` (for example `0.3.0`) to pick an image tag; default is `latest`.
+Data is stored in the `pgdata` volume and survives `docker compose down`.
