@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- PR workflow building a temporary Docker image (expires after 7 days)
+- Postman integration tests run with Newman against services (PostgreSQL and the app image)
+
 ## [0.3.0] - 2026-11-25
 
 ### Added
